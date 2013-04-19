@@ -7,11 +7,19 @@ module.exports = function(grunt) {
 		// Metadata
 		pkg: grunt.file.readJSON('{%= jqueryjson %}'),
 		basename: 'jquery.<%= pkg.name %>',
-		banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
-			'<%= grunt.template.today("yyyy-mm-dd") %>\n' +
-			'<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>' +
-			'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
-			' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
+		banner: [
+			'/*! <%= pkg.title || pkg.name %> v<%= pkg.version %> ' +
+				'(<%= grunt.template.today("yyyy-mm-dd") %>)',
+			'<%= pkg.homepage ? " * " + pkg.homepage : "" %>',
+			' * Licensed <%= _.pluck(pkg.licenses, "type").concat(["public domain"]).join("; ") %>',
+			' * ♡ <%= pkg.author.name %>. Please copy and share. http://copyheart.org',
+			' */'
+		].filter(function( line ) { return line; }).join('\n') + '\n',
+		minBanner: '/*! <%= pkg.title || pkg.name %> v<%= pkg.version %> |' +
+			' <%= pkg.licenses[0].url %> |' +
+			' ♡ <%= pkg.author.name %>' +
+			' */',
+
 		// Task configuration
 		clean: {
 			files: ['dist']
@@ -28,7 +36,7 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
-				banner: '<%= banner %>'
+				banner: '<%= minBanner %>'
 			},
 			dist: {
 				src: '<%= concat.dist.dest %>',
