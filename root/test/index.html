@@ -9,10 +9,28 @@
 	<script src="../libs/qunit/qunit.js"></script>
 
 	<!-- jQuery (location can be overridden with a ?jquery=<version> param) -->
+	<!-- TODO replace with qunit-picker -->
 	<script src="../libs/jquery-loader.js"></script>
 
 	<!-- Local lib -->
-	<script src="../src/{%= name %}.js"></script>
+	<script>
+		(function() {
+			var distPath = "../dist/"
+
+			// QUnit config parameter to toggle minified/unminified source
+			QUnit.config.urlConfig.push({
+				id: "dev",
+				label: "Unminified",
+				tooltip: "Load the unminified source"
+			});
+
+			// Load
+			document.write( "<script src='" + distPath + ( QUnit.urlParams.dev ?
+				"jquery.{%= name %}.js" :
+				"jquery.{%= name %}.min.js"
+			) + "'><\x2Fscript>" );
+		})();
+	</script>
 
 	<!-- Tests -->
 	<script src="unit.js"></script>
